@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience | Geotechnical Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0e27;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, -50px) rotate(5deg); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            position: relative;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            filter: blur(60px);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            position: relative;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #3b82f6;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+
+        .timeline-section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .timeline-section:hover::before {
+            left: 100%;
+        }
+
+        .timeline-section:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+        }
+
+        h2 {
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin-top: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6, #10b981);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.5rem;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background: #3b82f6;
+            border-radius: 50%;
+            border: 4px solid #0a0e27;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+        }
+
+        .timeline-item h3 {
+            color: #3b82f6;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item .company {
+            color: #8b5cf6;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .timeline-item .date {
+            color: #10b981;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .timeline-item p {
+            color: #94a3b8;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .timeline-item li {
+            color: #94a3b8;
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            color: #94a3b8;
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .social-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        .social-links a:hover {
+            color: #3b82f6;
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #3b82f6;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .timeline-section {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <h1>Professional Experience</h1>
+            <p>My career journey in geotechnical engineering and data science</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="experience.html" class="active">Experience</a></li>
+                <li><a href="interests.html">Interests</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div class="timeline-section">
+                <h2>Work Experience</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>Senior Geotechnical Engineer</h3>
+                        <div class="company">Company Name</div>
+                        <div class="date">2020 - Present</div>
+                        <p>Leading complex site investigations and foundation design projects for major infrastructure developments.</p>
+                        <ul>
+                            <li>Manage multi-disciplinary teams for large-scale geotechnical assessments</li>
+                            <li>Implement advanced data visualization tools to enhance project delivery</li>
+                            <li>Conduct slope stability analysis for critical infrastructure projects</li>
+                            <li>Develop innovative ground improvement solutions for challenging sites</li>
+                            <li>Client liaison for technical presentations and project reviews</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>Data Visualization Specialist</h3>
+                        <div class="company">Freelance / Contract</div>
+                        <div class="date">2019 - Present</div>
+                        <p>Developing custom web and desktop applications for geotechnical data analysis and visualization.</p>
+                        <ul>
+                            <li>Design and develop interactive 3D visualizations for terrain modeling</li>
+                            <li>Create point cloud processing tools for LiDAR data analysis</li>
+                            <li>Build web applications using React, Three.js, and modern frameworks</li>
+                            <li>Implement machine learning algorithms for change detection</li>
+                            <li>Provide consulting services for data-driven engineering projects</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>Geotechnical Engineer</h3>
+                        <div class="company">Previous Company</div>
+                        <div class="date">2015 - 2020</div>
+                        <p>Conducted comprehensive site investigations and geotechnical assessments for various project types.</p>
+                        <ul>
+                            <li>Performed field investigations and laboratory testing programs</li>
+                            <li>Prepared geotechnical reports and design recommendations</li>
+                            <li>Developed proficiency in LiDAR data processing and 3D modeling</li>
+                            <li>Collaborated with structural engineers on foundation designs</li>
+                            <li>Initiated integration of data science techniques into workflows</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>Graduate Engineer</h3>
+                        <div class="company">Engineering Firm</div>
+                        <div class="date">2013 - 2015</div>
+                        <p>Gained foundational experience in geotechnical engineering and developed analytical skills.</p>
+                        <ul>
+                            <li>Assisted in site investigations and field testing programs</li>
+                            <li>Conducted laboratory testing and data analysis</li>
+                            <li>Prepared technical drawings and documentation</li>
+                            <li>Developed strong analytical and problem-solving skills</li>
+                            <li>Built foundation knowledge in soil mechanics and foundation design</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-section">
+                <h2>Education & Certifications</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>Professional Engineer (PE)</h3>
+                        <div class="company">Engineering Board</div>
+                        <div class="date">2018</div>
+                        <p>Licensed Professional Engineer specializing in Geotechnical Engineering.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>Master of Engineering (Geotechnical)</h3>
+                        <div class="company">University Name</div>
+                        <div class="date">2011 - 2013</div>
+                        <p>Advanced studies in geotechnical engineering with focus on numerical modeling and data analysis.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3>Bachelor of Civil Engineering</h3>
+                        <div class="company">University Name</div>
+                        <div class="date">2007 - 2011</div>
+                        <p>Graduated with First Class Honours. Foundation in civil and structural engineering principles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Your Name. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+                <a href="mailto:your.email@example.com">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+    </script>
+</body>
+</html>

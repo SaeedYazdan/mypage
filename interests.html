@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interests | Geotechnical Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0e27;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, -50px) rotate(5deg); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            position: relative;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            filter: blur(60px);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            position: relative;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #3b82f6;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+
+        section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            margin-bottom: 3rem;
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        section:hover::before {
+            left: 100%;
+        }
+
+        section:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+        }
+
+        h2 {
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .interest-card {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interest-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .interest-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .interest-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .interest-card:hover::after {
+            opacity: 1;
+        }
+
+        .interest-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .interest-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .interest-card h3 {
+            color: #3b82f6;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .interest-card p {
+            color: #94a3b8;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tools-section {
+            margin-top: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tool-badge {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            text-align: center;
+            color: #3b82f6;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tool-badge:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            color: #94a3b8;
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .social-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        .social-links a:hover {
+            color: #3b82f6;
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #3b82f6;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            section {
+                padding: 2rem;
+            }
+
+            .interests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <h1>Interests & Expertise</h1>
+            <p>My passion areas and technical specializations</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="experience.html">Experience</a></li>
+                <li><a href="interests.html" class="active">Interests</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <section>
+                <h2>Technical Interests</h2>
+                <div class="interests-grid">
+                    <div class="interest-card">
+                        <span class="interest-icon">🏔️</span>
+                        <h3>3D Terrain Modeling</h3>
+                        <p>Creating detailed three-dimensional terrain models from LiDAR data for engineering analysis, visualization, and decision-making. Specializing in high-resolution digital elevation models and surface representations.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">📊</span>
+                        <h3>Data Science & ML</h3>
+                        <p>Applying machine learning and statistical methods to geotechnical data for predictive modeling, pattern recognition, and automated analysis. Focus on neural networks for spatial data analysis.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">💻</span>
+                        <h3>Web Development</h3>
+                        <p>Building interactive web applications with modern frameworks like React, Vue, and Three.js. Creating responsive, user-friendly interfaces for complex data visualization and analysis tools.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">🎯</span>
+                        <h3>Point Cloud Processing</h3>
+                        <p>Advanced processing and analysis of massive point cloud datasets for engineering applications. Expertise in filtering, classification, feature extraction, and change detection algorithms.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">🔬</span>
+                        <h3>Research & Innovation</h3>
+                        <p>Exploring new methodologies at the intersection of geotechnical engineering and data science. Contributing to academic research and industry innovations in spatial data analysis.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">🌍</span>
+                        <h3>GIS & Geospatial</h3>
+                        <p>Integrating geospatial analysis with engineering workflows for comprehensive site assessment. Proficient in ArcGIS, QGIS, and custom geospatial data processing tools.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">🎨</span>
+                        <h3>Data Visualization</h3>
+                        <p>Transforming complex datasets into intuitive, interactive visualizations. Using D3.js, Plotly, and custom WebGL solutions to make data accessible and actionable.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">🤖</span>
+                        <h3>Automation & Scripting</h3>
+                        <p>Developing automated workflows and custom scripts to streamline engineering processes. Expertise in Python, JavaScript, and bash scripting for data processing pipelines.</p>
+                    </div>
+
+                    <div class="interest-card">
+                        <span class="interest-icon">🏗️</span>
+                        <h3>Infrastructure Design</h3>
+                        <p>Applying advanced analysis techniques to infrastructure projects. Focus on sustainable design, risk assessment, and optimization of geotechnical solutions for complex projects.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Technical Tools & Technologies</h2>
+                <div class="tools-section">
+                    <h3 style="color: #8b5cf6; margin-bottom: 1rem; font-size: 1.3rem;">Programming Languages</h3>
+                    <div class="tools-grid">
+                        <div class="tool-badge">Python</div>
+                        <div class="tool-badge">JavaScript</div>
+                        <div class="tool-badge">R</div>
+                        <div class="tool-badge">C++</div>
+                        <div class="tool-badge">SQL</div>
+                        <div class="tool-badge">TypeScript</div>
+                    </div>
+                </div>
+
+                <div class="tools-section">
+                    <h3 style="color: #8b5cf6; margin-bottom: 1rem; font-size: 1.3rem;">Frameworks & Libraries</h3>
+                    <div class="tools-grid">
+                        <div class="tool-badge">React</div>
+                        <div class="tool-badge">Three.js</div>
+                        <div class="tool-badge">D3.js</div>
+                        <div class="tool-badge">Plotly</div>
+                        <div class="tool-badge">TensorFlow</div>
+                        <div class="tool-badge">PyTorch</div>
+                        <div class="tool-badge">Pandas</div>
+                        <div class="tool-badge">NumPy</div>
+                    </div>
+                </div>
+
+                <div class="tools-section">
+                    <h3 style="color: #8b5cf6; margin-bottom: 1rem; font-size: 1.3rem;">Geospatial & Engineering Software</h3>
+                    <div class="tools-grid">
+                        <div class="tool-badge">CloudCompare</div>
+                        <div class="tool-badge">PDAL</div>
+                        <div class="tool-badge">ArcGIS</div>
+                        <div class="tool-badge">QGIS</div>
+                        <div class="tool-badge">AutoCAD</div>
+                        <div class="tool-badge">PLAXIS</div>
+                        <div class="tool-badge">FLAC</div>
+                        <div class="tool-badge">GeoStudio</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Current Learning & Future Interests</h2>
+                <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.8;">
+                    I'm continuously expanding my knowledge in emerging technologies and methodologies. Currently exploring deep learning applications for geotechnical risk assessment, real-time point cloud streaming for collaborative engineering, and advanced WebGPU techniques for high-performance data visualization.
+                </p>
+                <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.8; margin-top: 1rem;">
+                    Future areas of interest include integrating IoT sensor data with traditional geotechnical monitoring, developing augmented reality tools for field investigations, and exploring quantum computing applications for complex numerical modeling.
+                </p>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Your Name. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+                <a href="mailto:your.email@example.com">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+    </script>
+</body>
+</html>
