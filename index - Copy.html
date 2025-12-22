@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Geotechnical Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #0a0e27;
+            overflow-x: hidden;
+        }
+
+        /* Network mesh canvas background */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            position: relative;
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            filter: blur(60px);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        header h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header p {
+            font-size: 1.3rem;
+            color: #94a3b8;
+            position: relative;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #3b82f6;
+            animation: fadeInUp 1s ease-out 0.4s both;
+            backdrop-filter: blur(10px);
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #3b82f6;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            margin-bottom: 3rem;
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        section:hover::before {
+            left: 100%;
+        }
+
+        section:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+        }
+
+        h2 {
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .skill-card {
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .skill-card h3 {
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-card h3::before {
+            content: '◆';
+            color: #8b5cf6;
+            font-size: 0.8rem;
+        }
+
+        .skill-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .skill-card li {
+            margin: 0.8rem 0;
+            color: #94a3b8;
+            padding-left: 1.5rem;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .skill-card li:before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .skill-card:hover li {
+            color: #e0e0e0;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .project-card:hover::after {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .project-card h3 {
+            color: #e0e0e0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-card p {
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-tag {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 0.3rem 0.3rem 0 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover .project-tag {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .contact-form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: #3b82f6;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            color: #94a3b8;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .social-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        .social-links a:hover {
+            color: #3b82f6;
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+            
+            section {
+                padding: 2rem;
+            }
+
+            .skills-grid, .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="network-canvas"></canvas>
+    <div class="grid-overlay"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <h1>Your Name</h1>
+            <p>Geotechnical Engineer | Point Cloud Analysis | Data Visualization</p>
+            <div style="margin-top: 2rem;">
+                <span class="tech-badge">LiDAR</span>
+                <span class="tech-badge">3D Modeling</span>
+                <span class="tech-badge">WebGL</span>
+                <span class="tech-badge">Python</span>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="experience.html">Experience</a></li>
+                <li><a href="interests.html">Interests</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <section>
+                <h2>Welcome</h2>
+                <p style="font-size: 1.2rem; line-height: 1.8; color: #94a3b8;">
+                    I'm a geotechnical engineer with a passion for leveraging advanced data analysis techniques to solve complex engineering challenges. My work focuses on point cloud data processing and creating intuitive web and desktop applications for large-scale data visualization.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.8; color: #94a3b8; margin-top: 1rem;">
+                    Through my work, I bridge the gap between traditional geotechnical engineering and modern data science, developing tools that make complex spatial data accessible and actionable for engineering decision-making.
+                </p>
+            </section>
+
+            <section>
+                <h2>Expertise Overview</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>Geotechnical Engineering</h3>
+                        <ul>
+                            <li>Site investigation & analysis</li>
+                            <li>Foundation design</li>
+                            <li>Slope stability assessment</li>
+                            <li>Ground improvement techniques</li>
+                            <li>Subsurface modeling</li>
+                        </ul>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Point Cloud Analysis</h3>
+                        <ul>
+                            <li>LiDAR data processing</li>
+                            <li>3D terrain modeling</li>
+                            <li>Feature extraction & classification</li>
+                            <li>Change detection analysis</li>
+                            <li>Volumetric calculations</li>
+                        </ul>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Data Visualization</h3>
+                        <ul>
+                            <li>Interactive web applications</li>
+                            <li>3D visualization (Three.js, WebGL)</li>
+                            <li>Real-time dashboards</li>
+                            <li>Geospatial mapping</li>
+                            <li>Custom visualization tools</li>
+                        </ul>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Technical Stack</h3>
+                        <ul>
+                            <li>Python, JavaScript, R</li>
+                            <li>React, D3.js, Plotly</li>
+                            <li>CloudCompare, PDAL</li>
+                            <li>GIS software & libraries</li>
+                            <li>Machine learning & AI</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Featured Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <h3>Terrain Analysis Dashboard</h3>
+                        <p>Interactive web application for analyzing LiDAR-derived terrain models with real-time cross-section generation, slope analysis, and automated reporting capabilities.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <span class="project-tag">React</span>
+                            <span class="project-tag">Three.js</span>
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">WebGL</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <h3>Point Cloud Viewer Pro</h3>
+                        <p>High-performance desktop application for visualizing and analyzing large point cloud datasets from geotechnical surveys with advanced filtering and measurement tools.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <span class="project-tag">Electron</span>
+                            <span class="project-tag">WebGL</span>
+                            <span class="project-tag">PDAL</span>
+                            <span class="project-tag">C++</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <h3>Deformation Monitoring System</h3>
+                        <p>Automated system for detecting ground movement and structural deformation using sequential point cloud comparison with millimeter-level precision.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">CloudCompare</span>
+                            <span class="project-tag">Plotly</span>
+                            <span class="project-tag">ML</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Get In Touch</h2>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Your Name. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+                <a href="mailto:your.email@example.com">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Network mesh animation
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let w, h, particles = [];
+        const particleCount = 80;
+        const maxDistance = 150;
+        const mouseRadius = 200;
+        let mouse = { x: null, y: null };
+
+        function init() {
+            resizeCanvas();
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            animate();
+        }
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > w) this.vx *= -1;
+                if (this.y < 0 || this.y > h) this.vy *= -1;
+
+                // Mouse interaction
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < mouseRadius) {
+                        const angle = Math.atan2(dy, dx);
+                        const force = (mouseRadius - dist) / mouseRadius;
+                        this.vx -= Math.cos(angle) * force * 0.2;
+                        this.vy -= Math.sin(angle) * force * 0.2;
+                    }
+                }
+
+                // Velocity damping
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+                ctx.fill();
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.5;
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            
+            // Add gradient background
+            const gradient = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+            gradient.addColorStop(0, 'rgba(10, 14, 39, 1)');
+            gradient.addColorStop(1, 'rgba(26, 31, 58, 1)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Mouse tracking
+        canvas.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvas);
+
+        // Initialize
+        init();
+
+        // Form submission handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submission would be handled here. For GitHub Pages, consider using Formspree, Netlify Forms, or EmailJS.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
