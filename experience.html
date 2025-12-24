@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience | Geotechnical Engineer</title>
+    <link rel="icon" type="image/x-icon" href="images/logo.ico">
+    <title>Experience | TerraIO</title>
     <style>
         * {
             margin: 0;
@@ -19,31 +20,14 @@
             overflow-x: hidden;
         }
 
-        .bg-animation {
+        /* Network mesh canvas background */
+        #network-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-            animation: bgShift 20s ease-in-out infinite;
-        }
-
-        @keyframes bgShift {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(-50px, -50px) rotate(5deg); }
         }
 
         .grid-overlay {
@@ -388,7 +372,7 @@
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
+    <canvas id="network-canvas"></canvas>
     <div class="grid-overlay"></div>
     <div class="particles" id="particles"></div>
 
@@ -523,6 +507,175 @@
         }
 
         createParticles();
+
+
+
+        // Network mesh animation
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let w, h, particles = [];
+
+
+        //const particleCount = 80;
+        //const maxDistance = 150;
+
+        // NEW CODE (add this):
+        function getParticleCount() {
+            const width = window.innerWidth;
+            if (width < 768) {
+                // Mobile: fewer particles
+                return 200;
+            } else if (width < 1200) {
+                // Tablet: medium particles
+                return 400;
+            } else {
+                // Desktop: full particles
+                return 750;
+            }
+        }
+
+        function getMaxDistance() {
+            const width = window.innerWidth;
+            if (width < 768) {
+                // Mobile: shorter connections
+                return 120;
+            } else if (width < 1200) {
+                // Tablet: medium connections
+                return 150;
+            } else {
+                // Desktop: full connections
+                return 200;
+            }
+        }
+
+        let particleCount = getParticleCount();
+        let maxDistance = getMaxDistance();
+        
+
+
+
+
+        const mouseRadius = 200;
+        let mouse = { x: null, y: null };
+
+        function init() {
+            resizeCanvas();
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            animate();
+        }
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > w) this.vx *= -1;
+                if (this.y < 0 || this.y > h) this.vy *= -1;
+
+                // Mouse interaction
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < mouseRadius) {
+                        const angle = Math.atan2(dy, dx);
+                        const force = (mouseRadius - dist) / mouseRadius;
+                        this.vx -= Math.cos(angle) * force * 0.2;
+                        this.vy -= Math.sin(angle) * force * 0.2;
+                    }
+                }
+
+                // Velocity damping
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+                ctx.fill();
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.5;
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            
+            // Add gradient background
+            const gradient = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+            gradient.addColorStop(0, 'rgba(10, 14, 39, 1)');
+            gradient.addColorStop(1, 'rgba(26, 31, 58, 1)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Mouse tracking
+        canvas.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvas);
+
+        // Initialize
+        init();
+
+
+
+
     </script>
 </body>
 </html>
