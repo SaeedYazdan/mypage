@@ -734,8 +734,45 @@
         const ctx = canvas.getContext('2d');
         
         let w, h, particles = [];
-        const particleCount = 500;
-        const maxDistance = 250;
+
+
+        //const particleCount = 500;
+        //const maxDistance = 250;
+
+        // NEW CODE (add this):
+        function getParticleCount() {
+            const width = window.innerWidth;
+            if (width < 768) {
+                // Mobile: fewer particles
+                return 40;
+            } else if (width < 1200) {
+                // Tablet: medium particles
+                return 80;
+            } else {
+                // Desktop: full particles
+                return 150;
+            }
+        }
+
+        function getMaxDistance() {
+            const width = window.innerWidth;
+            if (width < 768) {
+                // Mobile: shorter connections
+                return 120;
+            } else if (width < 1200) {
+                // Tablet: medium connections
+                return 150;
+            } else {
+                // Desktop: full connections
+                return 200;
+            }
+        }
+
+        let particleCount = getParticleCount();
+        let maxDistance = getMaxDistance();
+
+
+
         const mouseRadius = 200;
         let mouse = { x: null, y: null };
 
