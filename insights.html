@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/logo.ico">
+    <title>Insights | TerraIO</title>
+    <meta name="description" content="Technical writing on geotechnical research, LiDAR processing, drone mapping, AI, and engineering digitalisation from TerraIO.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.75rem;
+            margin-top: 2rem;
+        }
+        .insight-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            display: block;
+            transition: border-color 0.3s ease, transform 0.2s ease;
+        }
+        .insight-card:hover {
+            border-color: rgba(59, 130, 246, 0.45);
+            transform: translateY(-3px);
+        }
+        .insight-date {
+            font-size: 0.8rem;
+            color: #64748b;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        .insight-card h3 {
+            color: #e2e8f0;
+            font-size: 1.15rem;
+            line-height: 1.4;
+            margin-bottom: 0.9rem;
+        }
+        .insight-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .insight-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #3b82f6;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: gap 0.2s;
+        }
+        .insight-card:hover .read-more { gap: 0.7rem; }
+        .coming-soon {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .coming-soon-badge {
+            display: inline-block;
+            background: rgba(100, 116, 139, 0.2);
+            color: #64748b;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            margin-bottom: 0.75rem;
+        }
+        .section-intro {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #94a3b8;
+            max-width: 680px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="network-canvas"></canvas>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <div class="logo-container">
+                <img src="images/logo.png" alt="TerraIO Logo" class="header-logo">
+            </div>
+            <h1>Insights</h1>
+            <p>Technical writing on geotechnical research, spatial computing, and engineering digitalisation</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="experience.html">Experience</a></li>
+                <li><a href="services.html">Capabilities</a></li>
+                <li><a href="insights.html" class="active">Insights</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <section>
+                <p class="section-intro">
+                    Notes, demonstrations, and technical write-ups from ongoing research and applied work. The focus is practical, real data, real pipelines, real results. If something here is relevant to a problem you are working on, get in touch.
+                </p>
+
+                <div class="insights-grid">
+
+                    <!-- Article 1 — Published -->
+                    <a href="insights/lidar-intensity-mid360.html" class="insight-card">
+                        <div class="insight-date">June 2026</div>
+                        <h3>What a $1,200 LiDAR Scanner Can Actually Do, and Why Intensity Matters</h3>
+                        <p>The Livox Mid-360 scanning a real workspace: indoor geometry, outdoor vegetation at 30m+, and what intensity colouring reveals about material classification without a camera.</p>
+                        <div class="insight-tags">
+                            <span class="project-tag">LiDAR</span>
+                            <span class="project-tag">Point Cloud</span>
+                            <span class="project-tag">Built Environment</span>
+                            <span class="project-tag">Livox Mid-360</span>
+                        </div>
+                        <div class="read-more">Read article →</div>
+                    </a>
+
+                    <!-- Placeholder 2 — Coming soon -->
+                    <div class="insight-card coming-soon">
+                        <div class="coming-soon-badge">Coming soon</div>
+                        <h3>Automating Rock Joint Orientation Extraction from LiDAR Point Clouds</h3>
+                        <p>A walkthrough of the Fourier-based method developed during PhD research, from raw scan to structured discontinuity data without manual picking.</p>
+                        <div class="insight-tags">
+                            <span class="project-tag">Rock Mechanics</span>
+                            <span class="project-tag">Automation</span>
+                            <span class="project-tag">PhD Research</span>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder 3 — Coming soon -->
+                    <div class="insight-card coming-soon">
+                        <div class="coming-soon-badge">Coming soon</div>
+                        <h3>UAV Photogrammetry vs Terrestrial LiDAR for Pit Wall Mapping</h3>
+                        <p>A practical comparison of acquisition methods, accuracy trade-offs, and workflow implications for underground and open pit geotechnical applications.</p>
+                        <div class="insight-tags">
+                            <span class="project-tag">Drone Mapping</span>
+                            <span class="project-tag">Photogrammetry</span>
+                            <span class="project-tag">Mining</span>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder 4 — Coming soon -->
+                    <div class="insight-card coming-soon">
+                        <div class="coming-soon-badge">Coming soon</div>
+                        <h3>Building a Real-Time Geotechnical Monitoring Dashboard in Python</h3>
+                        <p>From raw sensor feeds to an interactive web dashboard, architecture, libraries, and the lessons learned from deploying it in a live underground environment.</p>
+                        <div class="insight-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Digitalisation</span>
+                            <span class="project-tag">Monitoring</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Simon Yazdan. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/simon-yazdan" target="_blank">LinkedIn</a>
+                <a href="mailto:info@terraio.com.au">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
