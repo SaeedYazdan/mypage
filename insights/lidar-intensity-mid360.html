@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../images/logo.ico">
+    <title>What a $1,200 LiDAR Scanner Can Actually Do | TerraIO Insights</title>
+    <meta name="description" content="The Livox Mid-360 at 2.5cm accuracy, indoor, outdoor, vegetation, and why intensity colouring is more than aesthetics. Practical use cases for built environment and civil applications.">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* ── Article-specific styles ── */
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .article-date {
+            color: #64748b;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+        .article-body {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .article-body h2 {
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            margin: 3rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        .article-body h3 {
+            font-size: 1.15rem;
+            color: #93c5fd;
+            margin: 2rem 0 0.75rem;
+        }
+        .article-body p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+        .article-body ul {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin: 0.5rem 0 1.5rem 1.5rem;
+        }
+        .article-body ul li {
+            margin-bottom: 0.5rem;
+        }
+        .article-body strong {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+        .article-lead {
+            font-size: 1.2rem !important;
+            color: #cbd5e1 !important;
+            line-height: 1.9 !important;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1.5rem;
+            margin-bottom: 2.5rem !important;
+        }
+        .intensity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .intensity-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .intensity-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .intensity-item p {
+            margin: 0 !important;
+            font-size: 0.95rem !important;
+            color: #94a3b8 !important;
+        }
+        .intensity-item strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+            color: #cbd5e1 !important;
+        }
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .use-case-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.3s ease;
+        }
+        .use-case-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .use-case-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        .use-case-card h3 {
+            margin: 0 0 0.6rem !important;
+            font-size: 1rem !important;
+            color: #e2e8f0 !important;
+        }
+        .use-case-card p {
+            margin: 0 !important;
+            font-size: 0.95rem !important;
+        }
+        .spec-bar {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-around;
+        }
+        .spec-item {
+            text-align: center;
+        }
+        .spec-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: block;
+        }
+        .spec-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+        .closing-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin: 3rem 0 1rem;
+        }
+        .closing-card p {
+            margin-bottom: 0.75rem !important;
+        }
+        .closing-card p:last-child {
+            margin-bottom: 0 !important;
+        }
+        .video-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem 0;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: #000;
+        }
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #3b82f6; }
+        .article-header-section {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .article-header-section h2 {
+            font-size: 2rem;
+            line-height: 1.3;
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            border: none !important;
+            padding: 0 !important;
+        }
+        @media (max-width: 600px) {
+            .spec-bar { gap: 1.25rem; }
+            .article-header-section h2 { font-size: 1.5rem; }
+            .article-lead { font-size: 1.05rem !important; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="network-canvas"></canvas>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <div class="logo-container">
+                <img src="../images/logo.png" alt="TerraIO Logo" class="header-logo">
+            </div>
+            <h1>TerraIO Insights</h1>
+            <p>Technical writing on geotechnical research, spatial computing, and engineering digitalisation</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../experience.html">Experience</a></li>
+                <li><a href="../services.html">Capabilities</a></li>
+                <li><a href="../insights.html" class="active">Insights</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div class="article-body">
+
+                <a href="../insights.html" class="back-link">← Back to Insights</a>
+
+                <div class="article-header-section">
+                    <h2>What a $1,200 LiDAR Scanner Can Actually Do, and Why Intensity Matters</h2>
+                    <div class="article-meta">
+                        <span class="article-date">June 2026</span>
+                        <span class="project-tag">LiDAR</span>
+                        <span class="project-tag">Point Cloud</span>
+                        <span class="project-tag">Built Environment</span>
+                        <span class="project-tag">Livox Mid-360</span>
+                    </div>
+                    <p class="article-lead">
+                        LiDAR is often associated with expensive survey-grade equipment, specialised operators, and project budgets that rule it out for routine work. The Livox Mid-360 changes that calculation — and this scan of an ordinary workspace is the demonstration.
+                    </p>
+                </div>
+
+                <!-- Specs bar -->
+                <div class="spec-bar">
+                    <div class="spec-item">
+                        <span class="spec-value">$1,200</span>
+                        <span class="spec-label">AUD, Unit Cost</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">2.5cm</span>
+                        <span class="spec-label">Point Accuracy</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">30m+</span>
+                        <span class="spec-label">Outdoor Range Demonstrated</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">360°</span>
+                        <span class="spec-label">Field of View</span>
+                    </div>
+                </div>
+
+                <h2>The Scan</h2>
+                <p>
+                    The scan below was captured in a standard residential workspace, with the field of view extending through an open doorway to the street frontage and surrounding vegetation. Trees at distances exceeding 30 metres are clearly resolved. The point cloud was processed and visualised in <strong>CloudCompare</strong>, with colouring applied by <strong>return intensity</strong>, not RGB. No camera. No targets. No post-processing beyond a standard FAST-LIO2 pipeline on Ubuntu.
+                </p>
+
+                <div class="video-wrapper" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+                    <iframe 
+                        src="https://www.youtube.com/embed/NDAL8GRYm1Q"
+                        title="Livox Mid-360 LiDAR scan, intensity colouring demonstration"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;">
+                    </iframe>
+                </div>
+
+                <h2>What Intensity Colouring Actually Tells You</h2>
+                <p>
+                    Every LiDAR pulse that strikes a surface returns a signal of varying strength. That strength, <strong>intensity</strong>, is a function of the material's reflectance properties, the angle of incidence, and the distance to the scanner. It is a physical measurement, not a visual one.
+                </p>
+                <p>
+                    In the scan above, distinct intensity signatures are visible across different surface types:
+                </p>
+
+                <div class="intensity-grid">
+                    <div class="intensity-item">
+                        <div class="intensity-dot" style="background:#60a5fa;"></div>
+                        <div>
+                            <strong>Painted walls & ceilings</strong>
+                            <p>Consistent mid-range return, clean and spatially uniform</p>
+                        </div>
+                    </div>
+                    <div class="intensity-item">
+                        <div class="intensity-dot" style="background:#1e3a5f;"></div>
+                        <div>
+                            <strong>Glass surfaces</strong>
+                            <p>Low or absent return, appears as voids or sparse regions</p>
+                        </div>
+                    </div>
+                    <div class="intensity-item">
+                        <div class="intensity-dot" style="background:#92400e;"></div>
+                        <div>
+                            <strong>Timber & flooring</strong>
+                            <p>Moderate return, variable with surface grain and angle</p>
+                        </div>
+                    </div>
+                    <div class="intensity-item">
+                        <div class="intensity-dot" style="background:#166534;"></div>
+                        <div>
+                            <strong>Vegetation</strong>
+                            <p>Characteristically low and noisy, partial penetration through foliage</p>
+                        </div>
+                    </div>
+                    <div class="intensity-item">
+                        <div class="intensity-dot" style="background:#f8fafc;"></div>
+                        <div>
+                            <strong>Metal fixtures</strong>
+                            <p>High intensity return, often saturated, clearly distinguishable</p>
+                        </div>
+                    </div>
+                    <div class="intensity-item">
+                        <div class="intensity-dot" style="background:#7c3aed;"></div>
+                        <div>
+                            <strong>Asphalt & concrete</strong>
+                            <p>Distinct mid-to-low return, separable from wall surfaces</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    This means that even without a single camera pixel, the scanner is already performing a basic material classification. With the right processing pipeline, those intensity bands become the basis for <strong>semantic segmentation</strong>, automatically separating walls from floors from vegetation from structure, purely from physics. That is not a post-processing trick. It is inherent in the data from the moment of acquisition.
+                </p>
+
+                <h2>Practical Use Cases</h2>
+                <p>These capabilities translate directly into routine built environment and civil engineering workflows:</p>
+
+                <div class="use-case-grid">
+                    <div class="use-case-card">
+                        <span class="use-case-icon"></span>
+                        <h3>As-Built Room Survey</h3>
+                        <p>Full room scan captures wall dimensions, ceiling height, window and door positions, and floor area in a single acquisition, typically under five minutes. Suitable for renovation documentation, heritage recording, and building compliance checks.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <span class="use-case-icon"></span>
+                        <h3>Tree Location & Canopy Mapping</h3>
+                        <p>Individual trees resolved at 30+ metres. Trunk position, diameter, and canopy extent extractable from a single scan position, useful for boundary disputes, arborist reports, and council vegetation audits.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <span class="use-case-icon"></span>
+                        <h3>Construction Verification</h3>
+                        <p>Scan before finishing trades begin. Verify door and window placement against architectural drawings before plastering or cladding conceals deviations. Simple application, clear cost-benefit case.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <span class="use-case-icon"></span>
+                        <h3>Dilapidation & Condition Records</h3>
+                        <p>A timestamped, spatially accurate point cloud is a more defensible record of property condition than photographs. Applicable to insurance assessments, pre-lease dilapidation surveys, and dispute resolution.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <span class="use-case-icon"></span>
+                        <h3>Façade & Roof Geometry</h3>
+                        <p>Ground-level scanning resolves roof pitch, eave geometry, and façade irregularity without scaffolding or drone permits. Surface condition anomalies become visible in intensity data alongside geometry.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <span class="use-case-icon"></span>
+                        <h3>Service Corridor Documentation</h3>
+                        <p>Intensity differences between pipe materials, conduit types, and surface coatings can distinguish service types without visual inspection. Useful for facilities management and infrastructure documentation.</p>
+                    </div>
+                </div>
+
+                <h2>Setup Notes</h2>
+                <p>
+                    The Livox Mid-360 runs on Linux via <strong>ROS2</strong>, with <strong>FAST-LIO2</strong> providing the SLAM-based mapping pipeline. Setup on Ubuntu is straightforward if you are comfortable with ROS2 workspaces, the main configuration steps involve correct IMU calibration, topic remapping, and tuning the FAST-LIO2 parameter file for indoor versus outdoor environments.
+                </p>
+                <p>
+                    Point cloud visualisation and intensity analysis in this article used <strong>CloudCompare</strong>, which is free and open source. For batch processing and pipeline automation, <strong>PDAL</strong> handles the heavy lifting well.
+                </p>
+                <p>
+                    Happy to share configuration notes for anyone working through the same ROS2 + FAST-LIO2 pipeline on Linux, feel free to <a href="../index.html#contact" style="color:#3b82f6;">get in touch</a> or raise a question via LinkedIn.
+                </p>
+
+                <div class="closing-card">
+                    <p>
+                        The gap between entry-level and professional-grade LiDAR is narrowing quickly. A $1,200 scanner with a well-configured pipeline on a Linux machine now produces data that would have required a $30,000+ instrument five years ago.
+                    </p>
+                    <p>
+                        The bottleneck is no longer the hardware. It is the workflow knowledge to extract value from the data.
+                    </p>
+                    <p style="color:#3b82f6; font-weight:600; margin-bottom:0 !important;">
+                        That is the gap TerraIO is focused on closing.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Simon Yazdan. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/simon-yazdan" target="_blank">LinkedIn</a>
+                <a href="mailto:info@terraio.com.au">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>
