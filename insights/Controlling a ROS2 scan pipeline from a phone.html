@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../images/logo.ico">
+    <title>Controlling a ROS2 LiDAR Pipeline from a Phone | TerraIO Insights</title>
+    <meta name="description" content="How TerraIO built a browser-based control interface for a Livox Mid-360 SLAM pipeline running on Ubuntu — start, stop, and monitor scans from a phone while the laptop rides in a backpack.">
+    <meta name="keywords" content="ROS2 remote control, Livox Mid-360, FAST-LIO2, underground LiDAR scanning, mobile scan control, Ubuntu ROS2 web interface, backpack LiDAR, geotechnical scanning">
+    <meta property="og:title" content="Controlling a ROS2 LiDAR Pipeline from a Phone | TerraIO Insights">
+    <meta property="og:description" content="A browser-based dashboard that launches, monitors, and stops a Livox Mid-360 SLAM pipeline from a phone — no terminal, no keyboard, laptop in the backpack.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://terraio.com.au/insights/remote-scan-control.html">
+    <link rel="canonical" href="https://terraio.com.au/insights/remote-scan-control.html">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* ── Article-specific styles ── */
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .article-date {
+            color: #64748b;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+        .article-body {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .article-body h2 {
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            margin: 3rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        .article-body h3 {
+            font-size: 1.15rem;
+            color: #93c5fd;
+            margin: 2rem 0 0.75rem;
+        }
+        .article-body p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+        .article-body ul {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin: 0.5rem 0 1.5rem 1.5rem;
+        }
+        .article-body ul li {
+            margin-bottom: 0.5rem;
+        }
+        .article-body strong {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+        .article-lead {
+            font-size: 1.2rem !important;
+            color: #cbd5e1 !important;
+            line-height: 1.9 !important;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1.5rem;
+            margin-bottom: 2.5rem !important;
+        }
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .pipeline-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .pipeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .pipeline-item p {
+            margin: 0 !important;
+            font-size: 0.95rem !important;
+            color: #94a3b8 !important;
+        }
+        .pipeline-item strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+            color: #cbd5e1 !important;
+        }
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .use-case-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.3s ease;
+        }
+        .use-case-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .use-case-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        .use-case-card h3 {
+            margin: 0 0 0.6rem !important;
+            font-size: 1rem !important;
+            color: #e2e8f0 !important;
+        }
+        .use-case-card p {
+            margin: 0 !important;
+            font-size: 0.95rem !important;
+        }
+        .spec-bar {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-around;
+        }
+        .spec-item {
+            text-align: center;
+        }
+        .spec-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: block;
+        }
+        .spec-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+        .closing-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin: 3rem 0 1rem;
+        }
+        .closing-card p {
+            margin-bottom: 0.75rem !important;
+        }
+        .closing-card p:last-child {
+            margin-bottom: 0 !important;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #3b82f6; }
+        .article-header-section {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .article-header-section h2 {
+            font-size: 2rem;
+            line-height: 1.3;
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            border: none !important;
+            padding: 0 !important;
+        }
+        .dashboard-preview {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .dashboard-preview .label { color: #64748b; }
+        .dashboard-preview .value-ok { color: #3fb950; font-weight: 600; }
+        .dashboard-preview .value-info { color: #3b82f6; font-weight: 600; }
+        .dashboard-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+        }
+        .dashboard-row:last-child { border-bottom: none; }
+        @media (max-width: 600px) {
+            .spec-bar { gap: 1.25rem; }
+            .article-header-section h2 { font-size: 1.5rem; }
+            .article-lead { font-size: 1.05rem !important; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="network-canvas"></canvas>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <div class="logo-container">
+                <img src="../images/logo.png" alt="TerraIO Logo" class="header-logo">
+            </div>
+            <h1>TerraIO Insights</h1>
+            <p>Technical writing on geotechnical research, spatial computing, and engineering digitalisation</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../experience.html">Experience</a></li>
+                <li><a href="../services.html">Capabilities</a></li>
+                <li><a href="../insights.html" class="active">Insights</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div class="article-body">
+
+                <a href="../insights.html" class="back-link">← Back to Insights</a>
+
+                <div class="article-header-section">
+                    <h2>Controlling a ROS2 LiDAR Scan Pipeline from a Phone</h2>
+                    <div class="article-meta">
+                        <span class="article-date">June 2026</span>
+                        <span class="project-tag">ROS2</span>
+                        <span class="project-tag">Livox Mid-360</span>
+                        <span class="project-tag">FAST-LIO2</span>
+                        <span class="project-tag">Underground Mapping</span>
+                    </div>
+                    <p class="article-lead">
+                        Handheld LiDAR scanners built for geotechnical and mining work are self-contained, processor, battery, IMU, and control app in one unit. They work well. This is a different approach: open-source hardware, a custom control interface, and a laptop in a backpack.
+                    </p>
+                </div>
+
+                <!-- Specs bar -->
+                <div class="spec-bar">
+                    <div class="spec-item">
+                        <span class="spec-value">3</span>
+                        <span class="spec-label">ROS2 processes managed</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">1.5s</span>
+                        <span class="spec-label">Dashboard refresh rate</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">WiFi</span>
+                        <span class="spec-label">Phone hotspot connection</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">0</span>
+                        <span class="spec-label">Native apps required</span>
+                    </div>
+                </div>
+
+                <h2>The problem with a laptop in a backpack</h2>
+                <p>
+                    Established handheld scanners, the GeoSLAM ZEB family, Leica BLK2GO, NavVis M6, are self-contained: processor, battery, and IMU in one unit, paired with a dedicated mobile app. They carry a significant price, but the operator experience is clean. Everything is in one hand, or clipped to a vest.
+                </p>
+                <p>
+                    A research-grade alternative is to pair a <strong>Livox Mid-360</strong> with a laptop running <strong>ROS2</strong> and <strong>FAST-LIO2</strong>. The scanner connects via a long M12 Ethernet cable handling both data and power. The laptop goes in a backpack. It is lighter and substantially cheaper than a commercial all-in-one, but it needs the tether, and it needs an operator interface.
+                </p>
+                <p>
+                    Managing three separate ROS2 processes, the Livox driver, FAST-LIO2, and the rosbag recorder, from a terminal while navigating a decline or a drive with a scanner trailing behind is not practical. That is the problem this addresses.
+                </p>
+
+                <h2>What was built</h2>
+                <p>
+                    A small web application that runs directly on the laptop and exposes the full scan pipeline through a browser interface. The laptop joins the phone's mobile hotspot over WiFi; from that point, any browser on the phone connects to a local dashboard served from the laptop, no native app, no Bluetooth pairing, no additional software on the phone side.
+                </p>
+
+                <div class="pipeline-grid">
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#3fb950;"></div>
+                        <div>
+                            <strong>Start</strong>
+                            <p>Launches Livox driver, FAST-LIO2, and rosbag recorder in sequence with correct timing between each process</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#f85149;"></div>
+                        <div>
+                            <strong>Stop</strong>
+                            <p>Sends a clean SIGINT shutdown to each process in order, bag data is written properly, not truncated</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#3b82f6;"></div>
+                        <div>
+                            <strong>Live status</strong>
+                            <p>Process health, elapsed scan time, current bag file name, and recording size, updated every 1.5 seconds</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#a78bfa;"></div>
+                        <div>
+                            <strong>LiDAR rate</strong>
+                            <p>Live Hz check on the /livox/lidar topic confirms data is flowing from the sensor, not just that processes are running</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    The dashboard updates status independently of whether the scan pipeline is healthy, if a process dies mid-scan, the status panel reflects it within 1.5 seconds. If the phone loses the hotspot connection and reconnects, the scan continues uninterrupted on the laptop; the dashboard simply picks up where it left off.
+                </p>
+
+                <h2>How the dashboard looks in use</h2>
+                <p>A typical active scan session shows the following in the browser:</p>
+
+                <div class="dashboard-preview">
+                    <div class="dashboard-row">
+                        <span class="label">Status</span>
+                        <span class="value-ok">● RECORDING</span>
+                    </div>
+                    <div class="dashboard-row">
+                        <span class="label">Elapsed</span>
+                        <span class="value-info">4m 32s</span>
+                    </div>
+                    <div class="dashboard-row">
+                        <span class="label">Bag size</span>
+                        <span class="value-info">1,847 MB</span>
+                    </div>
+                    <div class="dashboard-row">
+                        <span class="label">Livox driver</span>
+                        <span class="value-ok">running</span>
+                    </div>
+                    <div class="dashboard-row">
+                        <span class="label">FAST-LIO2</span>
+                        <span class="value-ok">running</span>
+                    </div>
+                    <div class="dashboard-row">
+                        <span class="label">Bag recorder</span>
+                        <span class="value-ok">running</span>
+                    </div>
+                    <div class="dashboard-row">
+                        <span class="label">LiDAR rate</span>
+                        <span class="value-info">10.2 Hz</span>
+                    </div>
+                </div>
+
+                <h2>What comes next</h2>
+                <p>
+                    This is the first phase. The dashboard currently provides process control and scan health monitoring. The next step is adding a <strong>live point cloud preview</strong> directly in the browser, a periodically-refreshed render from the FAST-LIO2 output, so coverage can be checked on the phone mid-scan without pulling the laptop out of the bag or stopping the recording. That removes the last reason to physically access the machine during a session.
+                </p>
+                <p>
+                    Further out, the intent is to run the web interface as a <strong>systemd service</strong> that starts on boot, so the laptop is scan-ready from power-on with no terminal interaction required at the site.
+                </p>
+
+                <h2>Stack</h2>
+                <p>
+                    The backend is a <strong>Python Flask</strong> application managing subprocess handles for each ROS2 process. The frontend is plain HTML and JavaScript, no framework, no build step, mobile-optimised for one-thumb use with large touch targets. The whole thing is around 300 lines of code. The ROS2 stack underneath it is <strong>ROS2 Humble</strong> on <strong>Ubuntu 22.04</strong>, with <strong>Livox SDK2</strong>, <strong>livox_ros_driver2</strong>, and a community ROS2 port of <strong>FAST-LIO2</strong>.
+                </p>
+
+                <div class="closing-card">
+                    <p>
+                        Commercial handheld scanners solve the operator experience problem well, and they are the right tool for many workflows. This setup trades that polish for openness, the full ROS2 pipeline is accessible, configurable, and extensible in ways a closed system is not.
+                    </p>
+                    <p>
+                        The control interface is a small piece of that. Getting the pipeline to a point where it disappears into the background, where the operator just walks and the data accumulates, is the goal.
+                    </p>
+                    <p style="color:#3b82f6; font-weight:600; margin-bottom:0 !important;">
+                        That is the kind of workflow infrastructure TerraIO is building toward.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Simon Yazdan. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/simon-yazdan" target="_blank">LinkedIn</a>
+                <a href="mailto:info@terraio.com.au">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>
