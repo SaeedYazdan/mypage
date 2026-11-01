@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../images/logo.ico">
+    <title>Mapping Rock Discontinuities from Point Cloud Colour | TerraIO Insights</title>
+    <meta name="description" content="PhaseVote extracts rock discontinuity traces from the colour in photogrammetric point clouds: 94.85% detection rate, no per-project tuning, minutes instead of hours.">
+    <meta name="keywords" content="PhaseVote, rock discontinuity extraction, discontinuity trace detection, rock mass characterisation, photogrammetry point cloud, phase congruency, tensor voting, region growing, automated joint mapping, geotechnical remote sensing">
+    <meta name="author" content="Simon Yazdan">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://terraio.com.au/insights/phasevote-rock-discontinuity-traces.html">
+
+    <!-- Open Graph / LinkedIn -->
+    <meta property="og:site_name" content="TerraIO">
+    <meta property="og:locale" content="en_AU">
+    <meta property="og:title" content="Mapping Rock Discontinuities from Point Cloud Colour | TerraIO Insights">
+    <meta property="og:description" content="A contrast-invariant method that finds joint traces geometry-only methods miss. Published in MDPI Remote Sensing, tested on two South Australian outcrops.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://terraio.com.au/insights/phasevote-rock-discontinuity-traces.html">
+    <meta property="og:image" content="https://terraio.com.au/images/insights/phasevote/phasevote-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Textured and geometry-only views of a rock face at Marino Beach, with a discontinuity visible only in the textured view">
+    <meta property="article:published_time" content="2026-11-01">
+    <meta property="article:author" content="https://linkedin.com/in/simon-yazdan">
+    <meta property="article:section" content="Research">
+    <meta property="article:tag" content="Rock Mass Characterisation">
+    <meta property="article:tag" content="Photogrammetry">
+    <meta property="article:tag" content="Point Cloud">
+    <meta property="article:tag" content="Computer Vision">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mapping Rock Discontinuities from Point Cloud Colour">
+    <meta name="twitter:description" content="PhaseVote finds joint traces that geometry-only methods miss. Published in MDPI Remote Sensing.">
+    <meta name="twitter:image" content="https://terraio.com.au/images/insights/phasevote/phasevote-og.jpg">
+
+    <!-- Structured data: article, the paper it summarises, and breadcrumbs -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "@id": "https://terraio.com.au/insights/phasevote-rock-discontinuity-traces.html#article",
+          "headline": "Mapping Rock Discontinuities from Point Cloud Colour with PhaseVote",
+          "description": "PhaseVote extracts rock discontinuity traces from the colour in photogrammetric point clouds: 94.85% detection rate, no per-project tuning, minutes instead of hours.",
+          "image": [
+            "https://terraio.com.au/images/insights/phasevote/phasevote-og.jpg",
+            "https://terraio.com.au/images/insights/phasevote/phasevote-colour-vs-geometry-marino-beach.jpg",
+            "https://terraio.com.au/images/insights/phasevote/phasevote-workflow-flowchart.jpg"
+          ],
+          "datePublished": "2026-11-01",
+          "dateModified": "2026-11-01",
+          "inLanguage": "en-AU",
+          "mainEntityOfPage": "https://terraio.com.au/insights/phasevote-rock-discontinuity-traces.html",
+          "author": {
+            "@type": "Person",
+            "name": "Simon Yazdan",
+            "url": "https://terraio.com.au/about.html",
+            "sameAs": ["https://linkedin.com/in/simon-yazdan"]
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "TerraIO",
+            "url": "https://terraio.com.au/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://terraio.com.au/images/logo.png"
+            }
+          },
+          "keywords": "PhaseVote, rock discontinuity extraction, discontinuity traces, photogrammetry, point cloud, phase congruency, tensor voting, region growing, rock mass characterisation",
+          "about": { "@id": "https://doi.org/10.3390/rs18203493" },
+          "citation": { "@id": "https://doi.org/10.3390/rs18203493" }
+        },
+        {
+          "@type": "ScholarlyArticle",
+          "@id": "https://doi.org/10.3390/rs18203493",
+          "headline": "Automatic Extraction of Discontinuity Traces from Rock Mass Point Cloud Data Using PhaseVote",
+          "author": [
+            { "@type": "Person", "name": "Mohammad Yazdanpanah" },
+            { "@type": "Person", "name": "Chaoshui Xu" },
+            { "@type": "Person", "name": "Peter Dowd" }
+          ],
+          "datePublished": "2026-10-12",
+          "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "DOI",
+            "value": "10.3390/rs18203493"
+          },
+          "url": "https://doi.org/10.3390/rs18203493",
+          "isAccessibleForFree": true,
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "isPartOf": {
+            "@type": "Periodical",
+            "name": "Remote Sensing",
+            "issn": "2072-4292",
+            "publisher": { "@type": "Organization", "name": "MDPI" }
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://terraio.com.au/index.html" },
+            { "@type": "ListItem", "position": 2, "name": "Insights", "item": "https://terraio.com.au/insights.html" },
+            { "@type": "ListItem", "position": 3, "name": "Mapping Rock Discontinuities from Point Cloud Colour" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* ── Article-specific styles ── */
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .article-date {
+            color: #64748b;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+        .article-body {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .article-body h2 {
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            margin: 3rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        .article-body h3 {
+            font-size: 1.15rem;
+            color: #93c5fd;
+            margin: 2rem 0 0.75rem;
+        }
+        .article-body p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+        .article-body ul {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin: 0.5rem 0 1.5rem 1.5rem;
+        }
+        .article-body ul li {
+            margin-bottom: 0.5rem;
+        }
+        .article-body strong {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+        .article-body p a {
+            color: #60a5fa;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+            transition: border-color 0.2s;
+        }
+        .article-body p a:hover { border-bottom-color: #60a5fa; }
+        .article-lead {
+            font-size: 1.2rem !important;
+            color: #cbd5e1 !important;
+            line-height: 1.9 !important;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1.5rem;
+            margin-bottom: 2.5rem !important;
+        }
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .pipeline-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .pipeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .pipeline-item p {
+            margin: 0 !important;
+            font-size: 0.95rem !important;
+            color: #94a3b8 !important;
+        }
+        .pipeline-item strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+            color: #cbd5e1 !important;
+        }
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .use-case-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.3s ease;
+        }
+        .use-case-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .use-case-card h3 {
+            margin: 0 0 0.6rem !important;
+            font-size: 1rem !important;
+            color: #e2e8f0 !important;
+        }
+        .use-case-card p {
+            margin: 0 !important;
+            font-size: 0.95rem !important;
+        }
+        .spec-bar {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-around;
+        }
+        .spec-item {
+            text-align: center;
+        }
+        .spec-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: block;
+        }
+        .spec-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+        .closing-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin: 3rem 0 1rem;
+        }
+        .closing-card p {
+            margin-bottom: 0.75rem !important;
+        }
+        .closing-card p:last-child {
+            margin-bottom: 0 !important;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #3b82f6; }
+        .article-header-section {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        /* Article title is an h1 for SEO; these rules give it the same look as the h2 title
+           used on the other Insights articles and neutralise any site-wide h1 styling. */
+        .article-header-section h1,
+        .article-header-section h2 {
+            font-size: 2rem;
+            line-height: 1.3;
+            color: #f1f5f9;
+            margin: 0 0 1rem;
+            border: none !important;
+            padding: 0 !important;
+            text-align: left;
+            letter-spacing: normal;
+            background: none;
+            -webkit-text-fill-color: #f1f5f9;
+            text-shadow: none;
+            animation: none;
+        }
+
+        /* ── Additions for this article: figures, results table, citation ── */
+        .pipeline-grid.two-col {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        .spec-bar.fit-row .spec-item {
+            flex: 1 1 0;
+            min-width: 130px;
+        }
+        .article-figure {
+            margin: 2rem 0 2.25rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 0.75rem;
+        }
+        .article-figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .article-figure figcaption {
+            color: #64748b;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            margin-top: 0.75rem;
+            padding: 0 0.35rem 0.15rem;
+        }
+        .results-table-wrap {
+            overflow-x: auto;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            margin: 1.5rem 0 2rem;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .results-table caption {
+            caption-side: bottom;
+            text-align: left;
+            color: #64748b;
+            font-size: 0.85rem;
+            padding: 0.85rem 1.1rem 1rem;
+            line-height: 1.6;
+        }
+        .results-table th {
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: right;
+            padding: 0.9rem 1.1rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            white-space: nowrap;
+        }
+        .results-table td {
+            color: #94a3b8;
+            text-align: right;
+            padding: 0.7rem 1.1rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        .results-table th:nth-child(-n+2),
+        .results-table td:nth-child(-n+2) { text-align: left; }
+        .results-table tr.phasevote td { color: #cbd5e1; }
+        .results-table tr.phasevote td.num { color: #3b82f6; font-weight: 600; }
+        .results-table tr.case-end td { border-bottom: 1px solid rgba(59, 130, 246, 0.2); }
+        .citation-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-left: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 1.5rem 1.75rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .citation-card p {
+            font-size: 0.98rem !important;
+            margin-bottom: 0.6rem !important;
+        }
+        .citation-card p:last-child { margin-bottom: 0 !important; }
+        .citation-card a { word-break: break-all; }
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .paper-link:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+        @media (max-width: 600px) {
+            .spec-bar { gap: 1.25rem; }
+            .pipeline-grid.two-col { grid-template-columns: 1fr; }
+            .article-header-section h1,
+            .article-header-section h2 { font-size: 1.5rem; }
+            .article-lead { font-size: 1.05rem !important; }
+            .results-table { font-size: 0.88rem; }
+            .results-table th, .results-table td { padding: 0.6rem 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="network-canvas"></canvas>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="header-glow"></div>
+            <div class="logo-container">
+                <img src="../images/logo.png" alt="TerraIO Logo" class="header-logo">
+            </div>
+            <h1>TerraIO Insights</h1>
+            <p>Technical writing on geotechnical research, spatial computing, and engineering digitalisation</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../experience.html">Experience</a></li>
+                <li><a href="../services.html">Capabilities</a></li>
+                <li><a href="../insights.html" class="active">Insights</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div class="article-body">
+
+                <a href="../insights.html" class="back-link">← Back to Insights</a>
+
+                <div class="article-header-section">
+                    <h1>Mapping Rock Discontinuities from Point Cloud Colour with PhaseVote</h1>
+                    <div class="article-meta">
+                        <time class="article-date" datetime="2026-11-01">November 2026</time>
+                        <span class="project-tag">Peer-Reviewed</span>
+                        <span class="project-tag">Photogrammetry</span>
+                        <span class="project-tag">Point Cloud</span>
+                        <span class="project-tag">Rock Mass Characterisation</span>
+                    </div>
+                    <p class="article-lead">
+                        Most automated discontinuity mapping works on geometry alone: point normals, region growing, fitted planes. That ignores what a geologist actually looks at on a rock face, which is colour. PhaseVote, now published in <em>Remote Sensing</em>, finds discontinuity traces in the survey photographs and feeds them back into the 3D plane model.
+                    </p>
+                </div>
+
+                <!-- Specs bar -->
+                <div class="spec-bar fit-row">
+                    <div class="spec-item">
+                        <span class="spec-value">94.85%</span>
+                        <span class="spec-label">Detection rate, Case A</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">70.27%</span>
+                        <span class="spec-label">IoU vs 45.95% for benchmark</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">~3 min</span>
+                        <span class="spec-label">Trace extraction vs 1.5 h by hand</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-value">1</span>
+                        <span class="spec-label">Fixed parameter set</span>
+                    </div>
+                </div>
+
+                <h2>Why geometry alone is not enough</h2>
+                <p>
+                    Region growing groups points whose normals and out-of-plane distances agree. It works well until two neighbouring planes sit inside the angular threshold, or weathering rounds off the edge between them, or a protruding block hides part of a joint surface. In each of those cases the geometry gives the wrong answer, and nothing in the point cloud flags it.
+                </p>
+                <p>
+                    On a weathered face the trace is often still visible in the photographs as a change in colour or texture, even where the surface itself is smooth. The figure below shows a sub-horizontal discontinuity at Marino Beach that is obvious in the textured mesh and close to invisible once the texture is stripped off. On that outcrop, a geometry-only approach missed <strong>16 of the 27 traces</strong> PhaseVote recovered.
+                </p>
+
+                <figure class="article-figure">
+                    <img src="../images/insights/phasevote/phasevote-colour-vs-geometry-marino-beach.jpg" width="1400" height="498" alt="Photogrammetric mesh of a siltstone outcrop at Marino Beach shown with colour texture and as bare geometry, with a red box around a discontinuity that is only visible in the textured version">
+                    <figcaption>The same Marino Beach outcrop with texture (left) and as geometry only (right). The discontinuity inside the red box is clear from colour and hard to see from shape. Figure 18 in the paper.</figcaption>
+                </figure>
+
+                <p>
+                    Colour brings its own problem. Standard edge detectors such as Canny and Sobel threshold on intensity changes, so they respond to shadows, staining and uneven lighting as readily as to joints, and someone has to pick the thresholds again for every site.
+                </p>
+
+                <h2>How PhaseVote works</h2>
+                <p>
+                    The method runs on the original photographs used to build the photogrammetric model, not on the point cloud. The camera positions and orientations recovered during bundle adjustment are kept, so whatever is found in 2D can be projected back onto the 3D mesh. Four stages do the work:
+                </p>
+
+                <div class="pipeline-grid two-col">
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#3b82f6;"></div>
+                        <div>
+                            <strong>Phase congruency</strong>
+                            <p>Marks edges where the frequency components of the image line up in phase, so the response does not depend on local contrast. A faint trace in shadow scores like a sharp one in sunlight.</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#a78bfa;"></div>
+                        <div>
+                            <strong>Tensor voting</strong>
+                            <p>Each edge fragment votes for neighbours that are close and aligned with it. Fragments that agree build up into continuous traces; isolated noise collects few votes and fades out.</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#3fb950;"></div>
+                        <div>
+                            <strong>Hysteresis thresholding</strong>
+                            <p>Strong ridges in the vote map seed the traces. Weaker ridges are kept only where they connect to a strong one.</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-item">
+                        <div class="pipeline-dot" style="background:#f85149;"></div>
+                        <div>
+                            <strong>Projection and plane expansion</strong>
+                            <p>Each trace pixel is cast as a ray from the camera's optical centre to the nearest mesh triangle. Region-grown planes then absorb trace points that are coplanar with them.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <figure class="article-figure">
+                    <img src="../images/insights/phasevote/phasevote-workflow-flowchart.jpg" width="1400" height="866" loading="lazy" decoding="async" alt="Flowchart of the PhaseVote workflow: image acquisition, photogrammetry, region growing, phase analysis, tensor voting, hysteresis, projection of edges, plane expansion and stereonets">
+                    <figcaption>The PhaseVote workflow. Image processing runs on one source photo, or several overlapping ones, and the traces are projected onto the photogrammetric point cloud before plane expansion. Figure 2 in the paper.</figcaption>
+                </figure>
+
+                <p>
+                    Tensor voting is normally too slow for high-resolution survey photos. PhaseVote uses the steerable-filter formulation of Franken et al., which computes the votes with convolutions and runs about 30,000 times faster than direct voting.
+                </p>
+                <p>
+                    All parameters are fixed: minimum wavelength 4, multiplier 2.1 and SigmaOnf 0.55 for phase congruency, a voting scale of 10, and hysteresis thresholds of 0.08 and 0.12. Both case studies used exactly these values.
+                </p>
+
+                <h2>What the traces fix in the plane model</h2>
+                <div class="use-case-grid">
+                    <div class="use-case-card">
+                        <h3>Planes that geometry merges</h3>
+                        <p>Two surfaces with nearly the same normal get grown as one plane. A trace between them gives region growing a boundary to stop at.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h3>Edges lost to weathering</h3>
+                        <p>Erosion blurs the edge between two planes. The colour change often survives where the geometric edge has gone.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h3>Planes split by occlusion</h3>
+                        <p>A protruding block can hide part of a joint, so it is detected as two patches. A trace running across both shows they are one fracture.</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h3>Planes that extend or get cut</h3>
+                        <p>A trace coplanar with a plane extends it into the rock mass. A trace crossing several planes marks a discontinuity cutting through them.</p>
+                    </div>
+                </div>
+
+                <h2>Results on two South Australian outcrops</h2>
+                <p>
+                    Both outcrops were photographed with a Samsung Galaxy S23 Ultra phone and turned into photogrammetric models (Case A in Agisoft Metashape). They were picked to differ in scale, image resolution and lithology.
+                </p>
+                <h3>Case A: Marino Beach</h3>
+                <p>
+                    47 photographs, 993,447 points. A 7 m wide face of weathered, heavily rounded Umberatana Group siltstone arranged in curved layered sheets, which makes for a messy test. Two images were used for trace detection.
+                </p>
+                <h3>Case B: Black Point, Hallett Cove</h3>
+                <p>
+                    79 photographs taken on a sunny day, over 2.8 million points. A 36.8 m by 11.1 m face of folded Neoproterozoic Seacliff Sandstone with fine layering and minor faults. A single image covering a large part of the face was used.
+                </p>
+                <p>
+                    Detected traces were scored against lines drawn by an experienced engineering geologist, made independently and before PhaseVote was run, with a 5-pixel tolerance. The comparison method is the image-analysis approach of Vasuki et al. (2014), which filters lines with a modified Hough transform.
+                </p>
+
+                <div class="results-table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Case</th>
+                                <th scope="col">Method</th>
+                                <th scope="col">Recall</th>
+                                <th scope="col">Precision</th>
+                                <th scope="col">F1</th>
+                                <th scope="col">IoU</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="phasevote">
+                                <td>A</td><td>PhaseVote</td>
+                                <td class="num">0.948</td><td class="num">0.748</td><td class="num">0.836</td><td class="num">0.703</td>
+                            </tr>
+                            <tr class="case-end">
+                                <td>A</td><td>Vasuki et al.</td>
+                                <td>0.761</td><td>0.611</td><td>0.667</td><td>0.459</td>
+                            </tr>
+                            <tr class="phasevote">
+                                <td>B</td><td>PhaseVote</td>
+                                <td class="num">0.847</td><td class="num">0.754</td><td class="num">0.798</td><td class="num">0.698</td>
+                            </tr>
+                            <tr>
+                                <td>B</td><td>Vasuki et al.</td>
+                                <td>0.698</td><td>0.649</td><td>0.672</td><td>0.438</td>
+                            </tr>
+                        </tbody>
+                        <caption>Trace detection performance against the geologist-drawn reference. Tables 2 and 3 in the paper.</caption>
+                    </table>
+                </div>
+
+                <p>
+                    Recall is where the gap is largest. Phase congruency picks up faint traces the benchmark misses, and tensor voting joins them into lines rather than leaving scattered fragments. Both methods score lower on Case B because one photo of a 37 m face carries less detail per metre of rock, so the small features drop out.
+                </p>
+
+                <figure class="article-figure">
+                    <img src="../images/insights/phasevote/phasevote-detected-traces-marino-beach.jpg" width="1400" height="526" loading="lazy" decoding="async" alt="Two photographs of the Marino Beach rock face with discontinuity traces detected by PhaseVote drawn as green lines">
+                    <figcaption>Traces detected by PhaseVote (green) over the two Marino Beach source images. Figure 12 in the paper.</figcaption>
+                </figure>
+
+                <p>
+                    Speed matters as much as accuracy for routine use. Running in Python on a laptop, trace extraction for Case A took about <strong>3 minutes</strong>. Labelling the same face by hand took <strong>1.5 hours</strong>.
+                </p>
+                <p>
+                    Plane orientations from the expanded regions agree with compass and inclinometer measurements on the major joint sets, and the automatic method finds many more planes than were measured in the field, where mapping was limited to accessible surfaces and the larger discontinuities. In Case A some false planes came from pebbles, boulders and vegetation along the top of the face. Masking those areas before processing would remove them.
+                </p>
+
+                <h2>Where the improvement comes from</h2>
+                <p>
+                    PhaseVote and the Vasuki method differ in both edge detection and line linking, so the head-to-head result does not say which part does the work. An ablation run settled it: same images, same hysteresis thresholds, with and without tensor voting.
+                </p>
+                <p>
+                    Without tensor voting, IoU on the first Marino Beach image fell from <strong>0.703 to 0.508</strong> and recall from 0.948 to 0.893. The second image showed the same pattern, with IoU dropping from 0.688 to 0.521. The traces were still being detected; they just stayed in pieces. Tensor voting is what turns those pieces into traces you can use.
+                </p>
+                <p>
+                    A sensitivity check varied each of the six fixed parameters while holding the rest at their defaults. F1 stayed within roughly 8 percentage points across the tested ranges, and the defaults sit in the stable region. IoU was more sensitive at the high end of the multiplier and SigmaOnf ranges, falling to around 0.48 and 0.49, so those two are best left at their defaults.
+                </p>
+
+                <h2>Limitations and next steps</h2>
+                <p>
+                    Two outcrops is a small sample. They were chosen to contrast with each other, but wider testing across rock types and lighting conditions is still needed, and the field orientation data only covers accessible surfaces, so it is a partial reference. The image-based projection also inherits the usual photogrammetry problems: surfaces hidden in every photo get no traces, and traces viewed at grazing angles get stretched across the mesh.
+                </p>
+                <p>
+                    Next on the list: validation on more field sites and public datasets, automatic view selection to maximise coverage and avoid oblique angles, and running the phase analysis directly on the point cloud at point or voxel level instead of on 2D images.
+                </p>
+
+                <h2>Read the paper</h2>
+                <div class="citation-card">
+                    <p>
+                        Yazdanpanah, M.; Xu, C.; Dowd, P. Automatic Extraction of Discontinuity Traces from Rock Mass Point Cloud Data Using PhaseVote. <em>Remote Sensing</em> <strong>2026</strong>, 18, 3493.
+                        <a href="https://doi.org/10.3390/rs18203493" target="_blank" rel="noopener">https://doi.org/10.3390/rs18203493</a>
+                    </p>
+                    <p>
+                        Open access under a CC BY licence. Published 12 October 2026. Research carried out at Adelaide University under the supervision of Chaoshui Xu and Peter Dowd. Figures on this page are reproduced from the paper.
+                    </p>
+                    <a class="paper-link" href="https://doi.org/10.3390/rs18203493" target="_blank" rel="noopener">Read the full paper →</a>
+                </div>
+
+                <div class="closing-card">
+                    <p>
+                        Point cloud tools for geotechnical work mostly treat a scan as geometry. The colour is captured anyway, by every photogrammetry survey and by a growing number of LiDAR rigs with cameras attached, and it carries structural information that shape alone does not.
+                    </p>
+                    <p>
+                        PhaseVote is one way of using it. The next step is getting colour and geometry into the same pass, so traces and planes come out of one model instead of being fused afterwards. If you are working on similar problems, <a href="../index.html#contact">get in touch</a>.
+                    </p>
+                    <p style="color:#3b82f6; font-weight:600; margin-bottom:0 !important;">
+                        That is the direction TerraIO's point cloud work is heading.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Simon Yazdan. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/simon-yazdan" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="mailto:info@terraio.com.au">Email</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>
